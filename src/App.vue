@@ -46,7 +46,7 @@
 import { ref } from 'vue'
 export default {
   setup() {
-    let showMobileMenu = ref(false)
+    const showMobileMenu = ref(false)
 
     return {
       showMobileMenu,

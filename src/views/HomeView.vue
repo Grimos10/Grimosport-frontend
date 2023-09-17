@@ -11,26 +11,24 @@
       </div>
     </section>
 
-    <div class="column is-multiline">
+    <div class="columns is-multiline">
       <div class="column is-12">
         <h2 class="is-size-2 has-text-centered">Ultimi prodotti usciti</h2>
-      </div>
-      <div class="columns"> 
-        <div
-        class="column is-one-third" id="product"
-        v-for="product in latestProducts"
-        :key="product.id"
-        >
-          <div class="box">
-            <figure class="image mb-4">
-              <img :src="product.get_thumbnail" :alt="product.name" />
-            </figure>
+      </div> 
+      <div
+      class="column is-3" id="product"
+      v-for="product in latestProducts"
+      :key="product.id"
+      >
+        <div class="box">
+          <figure class="image mb-4">
+            <img :src="product.get_thumbnail" :alt="product.name" />
+          </figure>
 
-            <h3 class="is-size-4">{{ product.name }}</h3>
-            <p class="is-size-6 has-text-grey">€{{ product.price }}</p>
+          <h3 class="is-size-4">{{ product.name }}</h3>
+          <p class="is-size-6 has-text-grey">€{{ product.price }}</p>
 
-            Vedi dettagli
-          </div>
+          <router-link :to="product.get_absolute_url" class="button is-dark mt-4"> Vedi dettagli </router-link>
         </div>
       </div>
     </div>
