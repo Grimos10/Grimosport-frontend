@@ -22,7 +22,7 @@
 
               <router-link to="/cart" class="button is-success">
                 <span class="icon"><i class="fas fa-shopping-cart"></i></span>
-                <span>Cart</span>
+                <span>Cart ({{ cartTotalLength }})</span>
               </router-link>
             </div>
           </div>
@@ -43,13 +43,34 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onBeforeMount, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
+
 export default {
   setup() {
     const showMobileMenu = ref(false)
+    const cart = ref({items: []})
+    const store = useStore()
+
+
+    onBeforeMount(() => {
+      store.commit('initializeStore')
+      cart.value = store.state.cart
+    })
+
+    const cartTotalLength = computed(() => {
+      let totalLenght = 0
+      cart.value.items.forEach(item => {
+        totalLenght += item.quantity
+      })
+      return totalLenght
+    })
+
 
     return {
       showMobileMenu,
+      cart,
+      cartTotalLength
     }
   },
 }

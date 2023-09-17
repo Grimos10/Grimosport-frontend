@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="control">
-                        <a class="button is-dark">Aggiungi al carrello</a>
+                        <a class="button is-dark" @click="addToCart">Aggiungi al carrello</a>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,9 @@
 <script>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 import axios from 'axios';
+import { toast } from 'bulma-toast';
 
 export default {
     name: 'Product',
@@ -43,6 +45,7 @@ export default {
         const quantity = ref(1);
         const category_slug = route.params.category_slug;
         const product_slug = route.params.product_slug;
+        const store = useStore();
 
         axios.get(`/api/v1/products/${category_slug}/${product_slug}/`).then((response) => {
             product.value = response.data;
@@ -51,9 +54,30 @@ export default {
             console.log(error);
         });
 
+        function addToCart() {
+            if (isNaN(quantity.value) || quantity.value < 1) {
+                quantity.value = 1;
+            }
+            const item = {
+                product: product.value,
+                quantity: quantity.value,
+            };
+            store.commit('addToCart', item);
+
+            toast({
+                message: 'Prodotto aggiunto al carrello',
+                type: 'is-success',
+                dismissible: true,
+                pauseOnHover: true,
+                duration: 2000,
+                position: 'bottom-right',
+            });
+        }
+
         return {
             product,
-            quantity,    
+            quantity,
+            addToCart,    
         }
     },
 
