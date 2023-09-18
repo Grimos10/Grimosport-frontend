@@ -15,22 +15,9 @@
       <div class="column is-12">
         <h2 class="is-size-2 has-text-centered">Ultimi prodotti usciti</h2>
       </div> 
-      <div
-      class="column is-3" id="product"
-      v-for="product in latestProducts"
-      :key="product.id"
-      >
-        <div class="box">
-          <figure class="image mb-4">
-            <img :src="product.get_thumbnail" :alt="product.name" />
-          </figure>
 
-          <h3 class="is-size-4">{{ product.name }}</h3>
-          <p class="is-size-6 has-text-grey">€{{ product.price }}</p>
-
-          <router-link :to="product.get_absolute_url" class="button is-dark mt-4"> Vedi dettagli </router-link>
-        </div>
-      </div>
+      <ProductBox v-for="product in latestProducts" :key="product.id" :product="product"></ProductBox>
+      
     </div>
   </div>
 </template>
@@ -39,17 +26,30 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
+import { useStore } from 'vuex';
+
+import ProductBox from '@/components/ProductBox.vue';
 
 export default {
   name: 'HomeView',
+  components: {
+    ProductBox,
+  },
   setup() {
     const latestProducts = ref([]);
+    const store = useStore();
 
-    axios.get('/api/v1/latest-products/').then((response) => {
-      latestProducts.value = response.data;
-    })
-    .catch((error) => {
-      console.log(error);
+    onMounted(async () => {
+      store.commit('setIsLoading', true);
+
+      await axios.get('/api/v1/latest-products/').then((response) => {
+        latestProducts.value = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      store.commit('setIsLoading', false);
     });
 
     return {
@@ -78,5 +78,4 @@ export default {
     max-height: 312px !important;*/
   }
 
-  
 </style>

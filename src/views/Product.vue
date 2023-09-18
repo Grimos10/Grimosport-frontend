@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import axios from 'axios';
@@ -47,11 +47,16 @@ export default {
         const product_slug = route.params.product_slug;
         const store = useStore();
 
-        axios.get(`/api/v1/products/${category_slug}/${product_slug}/`).then((response) => {
-            product.value = response.data;
-        })
-        .catch((error) => {
-            console.log(error);
+        store.commit('setIsLoading', true);
+
+        onMounted(async () => {
+            await axios.get(`/api/v1/products/${category_slug}/${product_slug}/`).then((response) => {
+                product.value = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+            store.commit('setIsLoading', false);
         });
 
         function addToCart() {
@@ -77,7 +82,7 @@ export default {
         return {
             product,
             quantity,
-            addToCart,    
+            addToCart,  
         }
     },
 
