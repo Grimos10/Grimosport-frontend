@@ -128,11 +128,18 @@
 import axios from 'axios';
 import { useStore } from 'vuex';
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { loadStripe } from '@stripe/stripe-js';
+import { toast } from 'bulma-toast';
+
+
+
 
 export default {
     name: 'Checkout',
     setup() {
         const store = useStore();
+        const router = useRouter();
         const cart = ref({ items: [] });
         const stripe = ref({});
         const card = ref({});
@@ -147,6 +154,12 @@ export default {
 
         onMounted(async () => {
             cart.value = store.state.cart;
+
+            if (cartTotalLenght.value > 0) {
+                stripe.value = Stripe('pk_test_51NsA1rBpXEnKYKYFHfPEReeMx6HdpuhzYvhjNsPrHEYOPKwt6qrJaJjQKkH1ueQdrm2tgjjdd3nv7JNRvnu5TkPn00BIvV2xTg')
+                card.value = await stripe.value.elements().create('card', { hidePostalCode: true });
+                card.value.mount('#card-element');
+            }
         });
 
         function getItemTotal(item) {
@@ -184,10 +197,71 @@ export default {
                 errors.value.push('Inserisci la tua città.');
             }
 
-            if (errors.value.length) {
-                return;
+            if (!errors.value.length) {
+                store.commit('setIsLoading', true);
+
+                stripe.value.createToken(card.value).then((result) => {
+                    if (result.error) {
+                        errors.value.push(result.error.message);
+                        store.commit('setIsLoading', false);
+                    } else {
+                        stripeTokenHandler(result.token);
+                    }
+                });
             }
-            
+
+        }
+
+        async function stripeTokenHandler(token) {
+            const items = [];
+
+            cart.value.items.forEach((item) => {
+                items.push({
+                    product: item.product.id,
+                    quantity: item.quantity,
+                    price: item.product.price * item.quantity,
+                });
+            });
+
+            const data = {
+                'first_name': first_name.value,
+                'last_name': last_name.value,
+                'email': email.value,
+                'address': address.value,
+                'zipcode': zipcode.value,
+                'place': place.value,
+                'phone': phone.value,
+                'items': items,
+                'stripe_token': token.id,
+            };
+
+
+
+
+            await axios
+                .post('/api/v1/checkout/', data)
+                .then((response) => {
+                    store.commit('clearCart');
+                    store.commit('setIsLoading', false);
+                    router.push('/cart/success');
+
+                    toast({
+                        message: 'Ordine effettuato con successo.',
+                        type: 'is-success',
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 3000,
+                        position: 'bottom-right',
+                    });
+
+                })
+                .catch((error) => {
+
+                    errors.value.push(error.response.data.detail);
+
+                    store.commit('setIsLoading', false);
+                });
+
         }
 
         const cartTotalLenght = computed(() => {
@@ -218,6 +292,7 @@ export default {
             cartTotalLenght,
             cartTotalPrice,
             submitForm,
+
         };
     },
     
