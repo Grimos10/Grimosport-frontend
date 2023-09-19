@@ -36,7 +36,7 @@
 
           <div class="navbar-item">
             <div class="buttons">
-              <router-link to="/log-in" class="button is-light">Log in</router-link>
+              <router-link to="/login" class="button is-light">Log in</router-link>
 
               <router-link to="/cart" class="button is-success">
                 <span class="icon"><i class="fas fa-shopping-cart"></i></span>
@@ -66,6 +66,7 @@
 
 <script>
 import { ref, onBeforeMount, computed, onMounted } from 'vue'
+import axios from 'axios'
 import { useStore } from 'vuex'
 
 export default {
@@ -78,6 +79,14 @@ export default {
     onBeforeMount(() => {
       store.commit('initializeStore')
       cart.value = store.state.cart
+      const token = store.state.token
+
+      if (token) {
+        axios.defaults.headers.common['Authorization'] = `Token ${token}`
+      } else {
+        axios.defaults.headers.common['Authorization'] = ""
+      }
+
     })
 
     const cartTotalLength = computed(() => {
