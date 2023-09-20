@@ -7,6 +7,7 @@ export default createStore({
     },
     isAuthenticated: false,
     token: '',
+    username: '',
     isLoading: false,
   },
   getters: {
@@ -44,9 +45,15 @@ export default createStore({
       state.token = token
       state.isAuthenticated = true
     },
+    setUsername(state, username) {
+      state.username = username
+    },
     removeToken(state) {
       state.token = ''
       state.isAuthenticated = false
+    },
+    removeUsername(state) {
+      state.username = ''
     },
     clearCart(state) {
       state.cart = { items: [] }

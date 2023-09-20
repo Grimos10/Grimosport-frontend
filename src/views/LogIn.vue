@@ -95,6 +95,9 @@ export default {
                     axios.defaults.headers.common['Authorization'] = `Token ${token}`;
                     localStorage.setItem('token', token);
 
+                    store.commit('setUsername', username.value);
+                    localStorage.setItem('username', username.value);
+
                     toast({
                         message: 'Login effettuato con successo.',
                         type: 'is-success',
