@@ -11,13 +11,27 @@
       </div>
     </section>
 
-    <div class="columns is-multiline">
+    <div v-if="(!$store.state.isAuthenticated) || (isEmpty)" class="columns is-multiline">
       <div class="column is-12">
         <h2 class="is-size-2 has-text-centered">Ultimi prodotti usciti</h2>
       </div> 
 
       <ProductBox v-for="product in latestProducts" :key="product.id" :product="product"></ProductBox>
       
+    </div>
+
+    <div v-else-if="$store.state.isAuthenticated" class="columns is-multiline">
+      <div class="column is-12">
+        <h2 class="is-size-2 has-text-centered">Ciao {{ username }} ecco per te cose simili a prodotti che hai acquistato</h2>
+      </div> 
+
+      <ProductBox v-for="product in moreBuyedProducts" :key="product.id" :product="product"></ProductBox>
+      <hr>
+      <div class="column is-12">
+        <h2 class="is-size-2 has-text-centered">Ultimi prodotti usciti</h2>
+      </div>
+
+      <ProductBox v-for="product in latestProducts" :key="product.id" :product="product"></ProductBox>
     </div>
   </div>
 </template>
@@ -37,6 +51,9 @@ export default {
   },
   setup() {
     const latestProducts = ref([]);
+    const moreBuyedProducts = ref([]);
+    const isEmpty = ref(false);
+    const username = ref('');
     const store = useStore();
 
     onMounted(async () => {
@@ -49,11 +66,27 @@ export default {
         console.log(error);
       });
 
+      if (store.state.isAuthenticated){
+        username.value = localStorage.getItem('username');
+        await axios.get('/api/v1/more-buyed-products/').then((response) => {
+        moreBuyedProducts.value = response.data;
+        if (moreBuyedProducts.value.length === 0) {
+          isEmpty.value = true;
+        }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
+
       store.commit('setIsLoading', false);
     });
 
     return {
       latestProducts,
+      moreBuyedProducts,
+      isEmpty,
+      username,
     };
   },
   

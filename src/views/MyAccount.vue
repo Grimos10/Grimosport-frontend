@@ -67,6 +67,7 @@ export default {
             });
 
             username.value = store.state.username;
+            username.value = localStorage.getItem('username');
 
             store.commit('setIsLoading', false);
         });
