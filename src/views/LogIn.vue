@@ -106,7 +106,9 @@ export default {
                         duration: 3000,
                         position: 'bottom-right',
                     });
-                    
+
+                    //TODO: cambiare il path to /myaccount se a fare il login è un account staff
+
                     const toPath = route.query.to || '/cart';
 
                     router.push(toPath);
