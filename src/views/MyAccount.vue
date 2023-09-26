@@ -3,18 +3,20 @@
         <div class="columns is-multiline" v-if="is_staff">
             <div class="column is-12">
                 <h1 class="title">Questo è un account staff</h1>
+                <button @click="logout()" class="button is-danger">Logout</button>
+                <hr/>
+                <h2 class="subtitle">Bentornat* {{ username }}, puoi vedere le statistiche di vendita cliccando il bottone qui sotto oppure compila tutti i campi per aggiungere un nuovo prodotto</h2>
             </div>
 
             <div class="column is-12">
-                <button @click="logout()" class="button is-danger">Logout</button>
-                <button class="button is-dark">Vai alle statistiche di vendita</button>
+                <router-link to="/stats" class="button is-info">Vai alle statistiche</router-link>
             </div>
 
             <div class="column is-12 box">
-                <h2 class="subtitle">Bentornat* {{ username }}, compila i seguenti campi per aggiungere un prodotto al database</h2>
 
                 <div class="columns is-multiline">
-                    <div class="column is-6">
+
+                    <form class="column is-6" @submit.prevent="addProduct">
                         
                         <div class="field">
                             <label>Categoria:</label>
@@ -28,14 +30,14 @@
                         <div class="field">
                             <label>Nome:</label>
                             <div class="control">
-                                <input class="input" type="text" v-model="name">
+                                <input class="input" type="text" v-model="name" required>
                             </div>
                         </div>
 
                         <div class="field">
                             <label>Slug:</label>
                             <div class="control">
-                                <input class="input" type="text" v-model="slug">
+                                <input class="input" type="text" v-model="slug" required>
                             </div>
                         </div>
 
@@ -49,7 +51,7 @@
                         <div class="field">
                             <label>Prezzo:</label>
                             <div class="control">
-                                <input class="input" type="number" step="0.01" min="0.01" v-model="price">
+                                <input class="input" type="number" step="0.01" min="0.01" v-model="price" required>
                             </div>
                         </div>
 
@@ -57,7 +59,7 @@
                             <label>Immagine:</label>
                             <div id="image" class="file has-name">
                                 <label class="file-label">
-                                    <input class="file-input" type="file" name="resume" @change="handleFileUpload">
+                                    <input class="file-input" type="file" name="resume" @change="handleFileUpload" required>
                                     <span class="file-cta">
                                         <span class="file-icon">
                                             <i class="fas fa-upload"></i>
@@ -74,14 +76,16 @@
                             </div>
                         </div>
 
+                        <hr>
+
                         <div class="field">
                             <div class="control">
-                                <button @click="addProduct()" class="button is-dark">Aggiungi prodotto</button>
+                                <button class="button is-dark">Aggiungi prodotto</button>
                             </div>
                         </div>
 
                         
-                    </div>
+                    </form>
                 </div>
             </div>
 
@@ -152,20 +156,26 @@ export default {
         const handleFileUpload = () => {
             image.value = document.querySelector('#image input[type=file]').files[0];
 
-            console.log(image.value);
         }
 
         async function addProduct() {
-            const formData = new FormData();
-            formData.append('category', category.value);
-            formData.append('name', name.value);
-            formData.append('description', description.value);
-            formData.append('slug', slug.value);
-            formData.append('price', price.value);
-            formData.append('image', image.value);
+            
+            const data = new FormData();
+            data.append('category', category.value);
+            data.append('name', name.value);
+            data.append('description', description.value);
+            data.append('slug', slug.value);
+            data.append('price', price.value);
+            data.append('image', image.value);
+
+            console.log(data);
 
             await axios
-            .post('/api/v1/products/', formData)
+            .post('/api/v1/add-product/', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
             .then((response) => {
                 toast({
                     message: 'Prodotto aggiunto con successo.',
@@ -176,6 +186,13 @@ export default {
             })
             .catch((error) => {
                 console.log(error);
+
+                toast({
+                    message: 'Errore durante l\'aggiunta del prodotto.',
+                    type: 'is-danger',
+                    position: 'bottom-right',
+                    duration: 3000,
+                });
             });
         }
 
