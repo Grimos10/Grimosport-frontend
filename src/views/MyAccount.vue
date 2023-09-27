@@ -159,6 +159,13 @@ export default {
         }
 
         async function addProduct() {
+
+            if (category.value === 'Summer'){
+                category.value = 1;
+            }
+            else{
+                category.value = 2;
+            }
             
             const data = new FormData();
             data.append('category', category.value);
