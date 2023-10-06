@@ -2,7 +2,7 @@
   <div id="wrapper">
     <nav class="navbar is-dark">
       <div class="navbar-brand">
-        <router-link to="/" class="navbar-item"><strong>NOMEAPP</strong></router-link>
+        <router-link to="/" class="navbar-item"><strong>GRIMOSPORT</strong></router-link>
 
         <a class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu" @click="showMobileMenu = !showMobileMenu">
           <span aria-hidden="true"></span>
@@ -28,6 +28,7 @@
               </div>
             </form>
           </div>
+          <router-link to="/about" class="navbar-item">Chi siamo</router-link>
         </div> 
           
         <div class="navbar-end">
@@ -70,6 +71,7 @@
 
 <!-- possible footer section
   <footer class="footer">
+    
   </footer>
 -->
 

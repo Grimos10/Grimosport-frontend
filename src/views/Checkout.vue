@@ -105,7 +105,9 @@
 
                 <hr>
 
-                <div id="card-element" class="mb-5"></div>
+                <div id="card-element" class="mb-5">
+                    <!--Stripe.js injects the Card Element-->
+                </div>
 
                 <template v-if="cartTotalLenght">
                     <hr>

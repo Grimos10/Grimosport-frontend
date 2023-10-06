@@ -11,12 +11,17 @@
 </template>
 
 <script>
+import { onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
     name: 'Success',
     setup() {
         const store = useStore();
+
+        onMounted(() => {
+            store.commit('clearCart');
+        });
 
         store.commit('initializeStore')
         return {

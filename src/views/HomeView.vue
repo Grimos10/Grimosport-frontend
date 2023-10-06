@@ -3,10 +3,10 @@
     <section class="hero is-medium is-dark mb-6">
       <div class="hero-body has-text-centered">
         <h1 class="title mb-6">
-          Home
+          GRIMOSPORT
         </h1>
         <h2 class="subtitle">
-          Welcome to the home page
+          Benvenuto nella home page di grimosport dove puoi trovare i nostri prodotti più recenti 
         </h2>
       </div>
     </section>

@@ -65,6 +65,7 @@ export default {
         const errors = ref([]);
         const store = useStore();
         const route = useRoute();
+        const is_staff = ref(false);
 
         const submitForm = async () => {
             axios.defaults.headers.common['Authorization'] = '';
@@ -89,7 +90,7 @@ export default {
                     username: username.value,
                     password: password.value,
                 })
-                .then((response) => {
+                .then(async (response) => {
                     const token = response.data.auth_token;
                     store.commit('setToken', token);
                     axios.defaults.headers.common['Authorization'] = `Token ${token}`;
@@ -108,10 +109,21 @@ export default {
                     });
 
                     //TODO: cambiare il path to /myaccount se a fare il login è un account staff
+                    await axios.get('/api/v1/users/me/').then((response) => {
+                        is_staff.value = response.data.is_staff;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
 
-                    const toPath = route.query.to || '/cart';
-
-                    router.push(toPath);
+                    if (is_staff.value) {
+                        router.push('/myaccount');
+                    }
+                    else {
+                        const toPath = route.query.to || '/cart';
+                        router.push(toPath);
+                    }
+                    
                 })
                 .catch((error) => {
                     if (error.response) {
