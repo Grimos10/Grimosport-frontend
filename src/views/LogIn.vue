@@ -108,7 +108,6 @@ export default {
                         position: 'bottom-right',
                     });
 
-                    //TODO: cambiare il path to /myaccount se a fare il login è un account staff
                     await axios.get('/api/v1/users/me/').then((response) => {
                         is_staff.value = response.data.is_staff;
                     })
