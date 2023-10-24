@@ -2,7 +2,7 @@
     <div class="page-my-account">
         <div class="columns is-multiline" v-if="is_staff">
             <div class="column is-12">
-                <h1 class="title">Questo è un account staff</h1>
+                <h1 class="title">Questo è un account moderatore</h1>
                 <button @click="logout()" class="button is-danger">Logout</button>
                 <button onclick="window.location.href='http://127.0.0.1:8000/admin/';" class="button is-warning ml-5">Vai al pannello di amministrazione</button>
                 <hr/>
