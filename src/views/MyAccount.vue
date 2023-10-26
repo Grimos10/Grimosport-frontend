@@ -4,7 +4,7 @@
             <div class="column is-12">
                 <h1 class="title">Questo è un account moderatore</h1>
                 <button @click="logout()" class="button is-danger">Logout</button>
-                <button onclick="window.location.href='http://127.0.0.1:8000/admin/';" class="button is-warning ml-5">Vai al pannello di amministrazione</button>
+                <button onclick="window.location.href='https://grimosportbackend.grimos.dev/admin';" class="button is-warning ml-5">Vai al pannello di amministrazione</button>
                 <hr/>
                 <h2 class="subtitle">Bentornat* {{ username }}, puoi vedere le statistiche di vendita cliccando il bottone qui sotto oppure compila tutti i campi per aggiungere un nuovo prodotto</h2>
             </div>
