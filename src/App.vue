@@ -69,11 +69,24 @@
       <router-view/>
     </section>
 
-<!-- possible footer section
-  <footer class="footer">
-    
-  </footer>
--->
+    <footer class="footer">
+      
+      <div class="content has-text-centered">
+        <p>
+          <strong>©</strong>
+          2023 GRIMOSPORT 
+        </p>
+        <span class="icon mr-2">
+          <a href="https://github.com/Grimos10" style="color: black;"><i class="fab fa-github fa-lg"></i></a>
+        </span>
+
+        <span class="icon">
+          <a href="mailto:biagiogrimos@grimos.dev" style="color: black;"><i class="fas fa-envelope fa-lg"></i></a>
+        </span>
+      </div>
+
+    </footer>
+
 
   </div>
 </template>
